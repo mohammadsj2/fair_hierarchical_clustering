@@ -150,7 +150,7 @@ def print_tree(node, s=""):
 #get the maximal clusters at some size level, return a list of clusters, each cluster is a list of points
 def find_maximal_clusters(root,size):
     if root.count > size:
-        return find_maximal_clusters_by_size(root.get_left(), size) + find_maximal_clusters_by_size(root.get_right(), size)
+        return find_maximal_clusters(root.get_left(), size) + find_maximal_clusters(root.get_right(), size)
     else:
         return [get_children(root)]
 
