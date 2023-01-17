@@ -2,11 +2,7 @@
 
 # My Paper Title
 
-This repository is the official implementation of [Fair Hierarchical Clustering](https://arxiv.org/abs/2006.10221). 
-
-Author: Y. Wang
-
-Email: yuyanw@andrew.cmu.edu
+This repository is for the working implementation of the algorithms in "Generalized Reductions: Making any Hierarchical Clustering Fair and Balanced with Low Cost"
 
 ## Requirements
 
