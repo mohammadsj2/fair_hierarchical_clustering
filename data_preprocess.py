@@ -156,7 +156,8 @@ if __name__ == "__main__":
     #change the filename into "adult.data" if want to use census, and "bank-full.csv" if want to use bank dataset.
     filename = "adult.data"
     #use function "load_data" if want to produce two color data sets
-    data, color_nums = load_data_multi_color(filename)
-    print(color_nums)
+    # data, color_nums = load_data_multi_color(filename)
+    data = load_data(filename)
+    # print(color_nums)
     #see the README file for default settings of output filenames
     np.savetxt("./adult.csv", data, delimiter=',', fmt='%s')

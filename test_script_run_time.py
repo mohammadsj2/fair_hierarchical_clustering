@@ -74,8 +74,8 @@ def test(filename, num_list, b, r, output_direc, num_instances, rho):
             # find the balance of maximal clustering
             scipy_maximal_cluster = find_maximal_clusters(scipy_root, b + r)
             scipy_root_balance = calculate_balance_clusters(scipy_maximal_cluster, len(blue_points))
-            #print("the balance of (b+r)-maximal clusters for original average-linkage is:")
-            #print(scipy_root_balance)
+            # print("the balance of (b+r)-maximal clusters for original average-linkage is:")
+            # print(scipy_root_balance)
             balance_f.write("{} ".format(scipy_root_balance))
 
             # find how much we lose by being fair

@@ -4,9 +4,10 @@ import math
 
 
 if __name__ == "__main__":
-    output_direc = ". /experiments_random_swap_multi_color"
-    filename = "adult_4_color.csv"
-    num_list = [2**k * 100 for k in range(5)]
+    # output_direc = ". /experiments_random_swap_multi_color"
+    output_direc = "/Users/maxspringer/Documents/GitHub/fair_hierarchical_clustering/experiments_moseley_wang_random"
+    filename = "adult.csv" # "adult_4_color.csv"
+    num_list = [2**k * 100 for k in range(3)]
     b = 1
     r = 7
 
@@ -60,6 +61,14 @@ if __name__ == "__main__":
         ratios.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
 
     np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "ratio") , np.array(ratios), delimiter=' ',fmt='%s')
+
+    balances = []
+    for size in num_list:
+        line = balance_f.readline().strip()
+        y = line.split(' ')
+        balances.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
+
+    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "balance") , np.array(balances), delimiter=' ',fmt='%s')
 
 
     objs = []

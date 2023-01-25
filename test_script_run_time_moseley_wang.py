@@ -1,4 +1,4 @@
-from helper_functions_moseley_wang import find_maximal_clusters, calculate_balance_clusters, calculate_hc_obj,condense_dist, avlk_with_fairlets, average_linkage, convert_dist, get_mw_upper_bound, get_cossim
+from helper_functions_moseley_wang import find_maximal_clusters, calculate_balance_clusters, calculate_hc_obj,condense_dist, avlk_with_fairlets, average_linkage, convert_dist, get_mw_upper_bound #, get_cossim
 from eps_local_opt_fairlet import load_data_with_color, subsample, calculate_distance, find_eps_local_opt, find_eps_local_opt_random, random_fairlet_decompose, calculate_obj
 
 import random
@@ -69,6 +69,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
 
             avlk_maximal_cluster = find_maximal_clusters(avlk_root, b + r)
             avlk_root_balance = calculate_balance_clusters(avlk_maximal_cluster, len(blue_points))
+            print(avlk_root_balance)
             #print("the balance of (b+r)-maximal clusters for original average-linkage is:")
             #print(scipy_root_balance)
             balance_f.write("{} ".format(avlk_root_balance))
@@ -80,6 +81,11 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
             fair_root = avlk_with_fairlets(simi, fairlets)
             fair_obj = calculate_hc_obj(simi, fair_root)
             ratio_1 = float(fair_obj / avlk_obj)
+
+            fair_max_cluster = find_maximal_clusters(fair_root, b + r)
+            print(fair_max_cluster)
+            fair_balance = calculate_balance_clusters(fair_max_cluster, len(blue_points))
+            print(fair_balance)
 
             upper_bound = get_mw_upper_bound(simi)
 
@@ -115,13 +121,13 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
 
 if __name__ == "__main__":
     sys.setrecursionlimit(100000)
-    filename = "adult_r.csv"
+    filename = "adult.csv" # "adult_r.csv"
     b = 1
     r = 7
     eps = 0.1
     rho = 0
     num_instances = 5
-    num_list = [100, 200, 400, 800, 1600]
+    num_list = [800] #, 800, 1600]
     np.random.seed(0)
     random.seed(0)
     output_direc = "./experiments_moseley_wang_random"
