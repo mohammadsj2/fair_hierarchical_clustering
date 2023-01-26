@@ -144,7 +144,8 @@ def calculate_balance_clusters(clusters, B):
             else:
                 red += 1
         if blue == 0 or red == 0:
-            return 0
+            # return 0
+            continue
         this_balance = np.minimum(float(blue / red),float(red / blue))
         if this_balance < balance:
             balance = this_balance

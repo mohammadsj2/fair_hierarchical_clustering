@@ -126,40 +126,42 @@ def find_maximal_clusters(root,size):
 			ids = ids + find_maximal_clusters(child, size)
 		return ids
 	else:
-		# print_tree(root)
 		return [get_leaves(root)]
 
+def get_all_clusters(root):
+	if root.is_leaf():
+		return []
+
+	clusters = [[]]
+	for child in root.get_children():
+		clusters = clusters + [get_leaves(child)] + get_all_clusters(child)
+	return clusters
+
 def calculate_balance_clusters(clusters, B):
-    balance = 1.0
-    for cluster in clusters:
-        blue = 0
-        red = 0
-        for u in cluster:
-            # print(u)
-            if u < B:
-                blue += 1
-            else:
-                red += 1
-        if blue == 0 or red == 0:
-            # print(cluster)
-            return 0
-            # continue
-        this_balance = np.minimum(float(blue / red),float(red / blue))
-        if this_balance < balance:
-            balance = this_balance
-    return balance
+	balance = 1.0
+	for cluster in clusters:
+		blue = 0
+		red = 0
+		for u in cluster:
+			if u < B:
+				blue += 1
+			else:
+				red += 1
+		if blue == 0 or red == 0:
+			return 0
+		this_balance = np.minimum(float(blue / red),float(red / blue))
+		if this_balance < balance:
+			balance = this_balance
+	return balances
 
 #calculate moseley wang objective function using recursion, returns obj, children
-def calculate_hc_obj(simi, root): ## NEEDS TO BE FIXED
+def calculate_hc_obj(simi, root):
 	n = simi.shape[0]
 	current_nodes = [root]
 	obj = 0.0
 
 	while len(current_nodes) > 0:
 		parent = current_nodes.pop()
-		# print_tree(parent)
-		# if parent.get_children() is None:
-		#	continue
 		children = parent.get_children()
 		term = n
 		if children is None:
@@ -167,12 +169,6 @@ def calculate_hc_obj(simi, root): ## NEEDS TO BE FIXED
 		for child in children:
 			current_nodes.append(child)
 			term = term - len(get_leaves(child))
-
-		# term := number of leaves in common ancestor
-
-		# term = n - len(get_leaves(children))
-		# print(children)
-		# print(term)
 
 		for i in children:
 			for j in children:
@@ -269,7 +265,6 @@ def rebalance_tree(root):
 	if root.is_leaf():
 		return root
 	v = root
-	# n = len(get_nodes(root))
 	n = len(get_leaves(root))
 	A = get_leaves(max_child(v))
 	while len(A) >= (2/3) * n:
@@ -286,7 +281,6 @@ def rebalance_tree(root):
 def refine_rebalance(root,eps):
 	n = len(get_leaves(root))
 	if eps <= 1/(2*n) or n == 1:
-		# print("no change")
 		return root 
 
 	v = root
@@ -302,7 +296,6 @@ def refine_rebalance(root,eps):
 		temp = Tbig.get_count()
 		delta = (Tbig.get_count() - n/2) / n
 		Tbig = subtree_search(Tbig, delta * n)
-		# print(Tbig.get_id())
 		if temp == Tbig.get_count(): break
 	Tbig   = refine_rebalance(Tbig, eps)
 	Tsmall = refine_rebalance(Tsmall,eps)
@@ -312,20 +305,21 @@ def refine_rebalance(root,eps):
 
 def fair_hc(root, eps, h, k, B):
 	if get_height(root) <= h:
-		# print("level abstract reduction")
 		return level_abstract(root, 0, h)
 	depth = math.ceil(math.log2(h))
-	#print(depth)
 	V = get_nodes_at(root,depth)
 	V = order_by_color(V, B)
-	# print(len(V))
+
 	new_root = level_abstract(root, 0, h)
+
+	# if all(child.is_leaf() for child in new_root.get_children()):
+	# 	return new_root
+
 	for i in range(k):
 		to_fold = []
 		for j in range(math.floor(h/k)):
 			idx = i + j * k
 			to_fold = to_fold + [V[idx]]
-		# print_tree(new_root)
 		new_root = tree_fold(new_root, to_fold)
 
 	for child in get_children(new_root):
@@ -339,14 +333,8 @@ def fair_hc(root, eps, h, k, B):
 
 ##### TREE OPERATORS #####
 def rebalance_op(root,v,idx=None):
-	# print("REBALANCE...")
-	#print("ROOT")
-	#print_tree(root)
-	#print("V")
-	#print_tree(v)
 	if root.get_id() == v.get_id() or v in root.get_children():
 		return root
-	# print_tree(root)
 	root = delete_subtree(root,v)
 	children = get_children(root)
 	counts = 0
@@ -356,25 +344,16 @@ def rebalance_op(root,v,idx=None):
 	new_node = Node(id=idx, children=children, count=counts)
 	root = add_child(root, v)
 	root = add_child(root, new_node)
-	#print("REBALANCED")
-	#print_tree(root)
 	return update_counts(root)
 
 def del_ins(root,v,u,idx=None):
-	# print("DELET INSERT")
-	# print("DELETION INSERT...")
 	counts = v.get_count() + u.get_count()
 	new_node = Node(id=idx, children=[u,v], count=counts)
-	# print_tree(new_node)
 	root = delete_subtree(root,v)
-
 	root = insert_op(root, new_node, u)
-	# print_tree(root)
 	return update_counts(root)
 
 def level_abstract(root, h1, h2):
-	# print("LEVEL ABSTRACT...")
-
 	level = 0
 	h1_nodes    = get_nodes_at(root, h1)
 	k = 0
@@ -387,17 +366,8 @@ def level_abstract(root, h1, h2):
 	return root 
 
 def tree_fold(root, subtrees):
-	# print("TREE FOLD...")
-	# check if all subtrees are isomorphic
-	# if all(child.is_leaf() for child in )
-	if all(child.is_leaf() for child in root.get_children()):
-		return root
-
 	if not check_iso(subtrees):
 		return root
-	# print_tree(root)
-	# for tree in subtrees:
-	# 	print_tree(tree)
 	for tree in subtrees[1:]:
 		root = delete_subtree(root,tree)
 		root = fold(root,tree)
@@ -452,9 +422,8 @@ def fold(root, tree):
 		root.children = root.get_children() + [tree]
 		return root
 
-	r_children = root.get_children() # get_children(root))
-	t_children = tree.get_children() # get_children(tree)
-	# print_tree(r_children)
+	r_children = root.get_children()
+	t_children = tree.get_children()
 
 	c_append = []
 	for idx in range(len(r_children)):
@@ -462,7 +431,6 @@ def fold(root, tree):
 			r_children[idx] = fold(r_children[idx],t_children[idx])
 		else:
 			r_children = r_children + t_children[idx:]
-			# print(r_children)
 			root.children = r_children
 			return root
 
@@ -542,15 +510,11 @@ def check_iso(subtrees):
 def subtree_search(root, eta):
 	v = root
 	while min_child(v).get_count() > eta:
-		# print("holds")
 		v = max_child(v)
-		# print(v.get_id())
 	v = min_child(v)
-	# print(v.get_id())
-	#print(v.get_count())
 
 	u = root
-	while max_child(u).get_count() >= v.get_count() and not u.is_leaf(): # and v.get_id() != u.get_id():#not u.is_leaf():
+	while max_child(u).get_count() >= v.get_count() and not u.is_leaf():
 		u = min_child(u)
 
 	root = del_ins(root, v, u, idx=get_max_id(u) + get_max_id(v))
@@ -570,8 +534,6 @@ def check_balance(root, eps):
 	return True
 
 def get_max_id(root): ##
-	# print("called on ")
-	# print(root.get_id())
 	if root.is_leaf():
 		return root.get_id()
 	else:
@@ -657,15 +619,11 @@ def delete_subtree(root, v):
 	# Check if singular child to absorb
 	children = get_children(root)
 	if len(children) == 1: # and not children[0].is_leaf():
-		root = children[0]# deepcopy(children[0])
-		# print("absorb")
-		# root.children = children[0].get_children()
+		root = children[0]
 
-	# Update counts
 	return update_counts(root)
 
 def update_counts(root):
-	# TO DO
 	root.count = len(get_leaves(root))
 	return root
 
@@ -677,21 +635,4 @@ if __name__ == "__main__":
 	dist, _ = calculate_distance(data)
 	simi = convert_dist(dist)
 	root, _ = average_linkage(simi)
-	# print(calculate_cost_obj(simi, root))
-
-	n = len(get_leaves(root))
-	# print(n)
-	bal6_tree = rebalance_tree(deepcopy(root))
-	print_tree(bal6_tree)
-
-	c = 1
-	delta = 1/2
-	k = 2 # bounded by h
-	eps = 1 / (c * math.log2(n))
-	balance_tree = refine_rebalance(bal6_tree, eps)
-	# print_tree(balance_tree)
-
-	h = n ** delta
-	fair_tree    = fair_hc(balance_tree, eps, h, k, 4)
-	print_tree(fair_tree)
 

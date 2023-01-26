@@ -59,7 +59,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
             ratio_f.write("{} ".format(dist_ratio))
             #swap_f.write("{} ".format(swap_counter))
             #random_f.write("{} ".format(random_counter))
-            print("total time spent on finding fairlets: %f s" % t)
+            # print("total time spent on finding fairlets: %f s" % t)
             #print("number of swaps: %d" %swap_counter)
             #print("number of randomization: %d" %random_counter)
 
@@ -69,7 +69,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
 
             avlk_maximal_cluster = find_maximal_clusters(avlk_root, b + r)
             avlk_root_balance = calculate_balance_clusters(avlk_maximal_cluster, len(blue_points))
-            print(avlk_root_balance)
+            # print(avlk_root_balance)
             #print("the balance of (b+r)-maximal clusters for original average-linkage is:")
             #print(scipy_root_balance)
             balance_f.write("{} ".format(avlk_root_balance))
@@ -83,13 +83,18 @@ def test(filename, num_list, b, r, output_direc, num_instances, eps, rho):
             ratio_1 = float(fair_obj / avlk_obj)
 
             fair_max_cluster = find_maximal_clusters(fair_root, b + r)
-            print(fair_max_cluster)
+            # print(fair_max_cluster)
             fair_balance = calculate_balance_clusters(fair_max_cluster, len(blue_points))
-            print(fair_balance)
+            # print(fair_balance)
 
             upper_bound = get_mw_upper_bound(simi)
 
             random_root = avlk_with_fairlets(simi, random_fairlets)
+            random_max_cluster = find_maximal_clusters(random_root, b+r)
+            random_balance = calculate_balance_clusters(random_max_cluster, len(blue_points))
+            print("BALANCE : ")
+            print(random_balance)
+
             random_obj = calculate_hc_obj(simi, random_root)
             ratio_2 = float(random_obj / avlk_obj)
 
@@ -123,11 +128,11 @@ if __name__ == "__main__":
     sys.setrecursionlimit(100000)
     filename = "adult.csv" # "adult_r.csv"
     b = 1
-    r = 7
+    r = 2
     eps = 0.1
     rho = 0
     num_instances = 5
-    num_list = [800] #, 800, 1600]
+    num_list = [256] #, 800, 1600]
     np.random.seed(0)
     random.seed(0)
     output_direc = "./experiments_moseley_wang_random"

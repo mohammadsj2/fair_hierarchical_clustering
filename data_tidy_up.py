@@ -5,11 +5,11 @@ import math
 
 if __name__ == "__main__":
     # output_direc = ". /experiments_random_swap_multi_color"
-    output_direc = "/Users/maxspringer/Documents/GitHub/fair_hierarchical_clustering/experiments_moseley_wang_random"
+    output_direc = "/Users/maxspringer/Documents/GitHub/fair_hierarchical_clustering/experiments_random_swap_no_validation_rho_0"
     filename = "adult.csv" # "adult_4_color.csv"
-    num_list = [2**k * 100 for k in range(3)]
+    num_list = [2**k * 100 for k in range(5)]
     b = 1
-    r = 7
+    r = 3
 
     num_instances = 5
 
@@ -71,16 +71,16 @@ if __name__ == "__main__":
     np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "balance") , np.array(balances), delimiter=' ',fmt='%s')
 
 
-    objs = []
-    next(obj_f)
-    for num in num_list:
-        next(obj_f)
-        good_data = []
-        good_ratio = []
-        for i in range(num_instances):
-            line = obj_f.readline().strip()
-            y = line.split(' ')
-            good_data.append(float(y[2]))
-            good_ratio.append(float(y[1]) / float(y[3]))
-        objs.append([num, np.average(good_data), np.std(good_data), np.average(good_ratio), np.std(good_ratio)])
-    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "obj") , np.array(objs), delimiter=' ', fmt='%s')
+    # objs = []
+    # next(obj_f)
+    # for num in num_list:
+    #     next(obj_f)
+    #     good_data = []
+    #     good_ratio = []
+    #     for i in range(num_instances):
+    #         line = obj_f.readline().strip()
+    #         y = line.split(' ')
+    #         good_data.append(float(y[2]))
+    #         good_ratio.append(float(y[1]) / float(y[3]))
+    #     objs.append([num, np.average(good_data), np.std(good_data), np.average(good_ratio), np.std(good_ratio)])
+    # np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "obj") , np.array(objs), delimiter=' ', fmt='%s')
