@@ -98,7 +98,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, c, ks, delta):
 
 if __name__ == "__main__":
     sys.setrecursionlimit(100000)
-    filename = "adult.csv"
+    filename = "Census Race 1:7 adult_r.csv"
     b = 1
     r = 7
     c = 4 #[1, 2, 4, 8, 16]
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     num_list = [128] #[100, 200, 400, 800, 1600]
     np.random.seed(0)
     random.seed(0)
-    output_direc = "/Users/maxspringer/Documents/GitHub/fair_hierarchical_clustering/experiments_springer"
+    output_direc = "./Results/experiments_springer"
     test(filename, num_list, b, r, output_direc, num_instances, c, ks, delta)
 
 
