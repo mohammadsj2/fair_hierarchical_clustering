@@ -33,9 +33,9 @@ def load_data(filename):
             x = []
             if empty_attr(y) == False:
             # white = 1, non-white = 0
-                if y[8] == 'White':
+                # if y[8] == 'White':
             # male = 1, female = 0
-                #if y[9] == 'Male':
+                if y[9] == 'Male':
                     x.append(1)
                 else:
                     x.append(0)
@@ -53,7 +53,7 @@ def load_data(filename):
                 x = []
                 if empty_attr(y) == False:
                 # married = 1, non-married = 0
-                    #if y[2] == '"married"':
+                    # if y[2] == '"married"':
                 # age < 40 is 1, >= 40 is 0
                     if float(y[0]) < 40:
                         x.append(1)
@@ -154,10 +154,10 @@ def load_data_multi_color(filename):
 
 if __name__ == "__main__":
     #change the filename into "adult.data" if want to use census, and "bank-full.csv" if want to use bank dataset.
-    filename = "adult.data"
+    filename = "bank-full.csv"
     #use function "load_data" if want to produce two color data sets
     # data, color_nums = load_data_multi_color(filename)
     data = load_data(filename)
     # print(color_nums)
     #see the README file for default settings of output filenames
-    np.savetxt("./adult.csv", data, delimiter=',', fmt='%s')
+    np.savetxt("./datas/Bank Age 2:3 bank_a.csv", data, delimiter=',', fmt='%s')
