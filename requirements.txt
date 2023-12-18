@@ -1,12 +1,4 @@
 numpy
-random
-math
-time
-copy
-cProfile
-pstats
-io
-sys
 scipy
 matplotlib
 numba

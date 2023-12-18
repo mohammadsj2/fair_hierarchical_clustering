@@ -5,13 +5,13 @@ import math
 
 if __name__ == "__main__":
     # output_direc = ". /experiments_random_swap_multi_color"
-    output_direc = "/Users/maxspringer/Documents/GitHub/fair_hierarchical_clustering/experiments_random_swap_no_validation_rho_0"
-    filename = "adult.csv" # "adult_4_color.csv"
-    num_list = [2**k * 100 for k in range(5)]
+    output_direc = "./Results/experiments_springer"
+    filename = "Census Race 1:7 adult_r.csv" # "adult_4_color.csv"
+    num_list = [128] #[2**k * 100 for k in range(5)]
     b = 1
-    r = 3
+    r = 7
 
-    num_instances = 5
+    num_instances = 10
 
     time_file = "{}/{}_{}_{}_{}.out".format(output_direc, filename.split(".")[0], "time", "b=" + str(b),
                                                "r=" + str(r))
@@ -26,12 +26,14 @@ if __name__ == "__main__":
     ratio_f = open(ratio_file, "r")
 
     times = []
-    for size in num_list:
-        line = time_f.readline().strip()
-        y = line.split(' ')
-        times.append([float(y[0]),np.average(np.array([y[i + 1] for i in range(num_instances)],dtype=float)), np.std(np.array([y[i + 1] for i in range(num_instances)],dtype=float))])
+    # for size in num_list:
+    #     line = time_f.readline().strip()
+    #     y = line.split(' ')
+    #     times.append([float(y[0]),
+    #                   np.average(np.array([y[i + 1] for i in range(num_instances)],dtype=float)), 
+    #                   np.std(np.array([y[i + 1] for i in range(num_instances)],dtype=float))])
 
-    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "time") , np.array(times), delimiter=' ', fmt='%s')
+    # np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "time") , np.array(times), delimiter=' ', fmt='%s')
 
     '''
     times = [y[1] for y in times]
@@ -54,33 +56,33 @@ if __name__ == "__main__":
     plt.show()
     plt.clf()
     '''
-    ratios = []
-    for size in num_list:
-        line = ratio_f.readline().strip()
-        y = line.split(' ')
-        ratios.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
+    # ratios = []
+    # for size in num_list:
+    #     line = ratio_f.readline().strip()
+    #     y = line.split(' ')
+    #     ratios.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
 
-    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "ratio") , np.array(ratios), delimiter=' ',fmt='%s')
+    # np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "ratio") , np.array(ratios), delimiter=' ',fmt='%s')
 
-    balances = []
-    for size in num_list:
-        line = balance_f.readline().strip()
-        y = line.split(' ')
-        balances.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
+    # balances = []
+    # for size in num_list:
+    #     line = balance_f.readline().strip()
+    #     y = line.split(' ')
+    #     balances.append([float(y[0]), np.average([float(y[i + 1]) for i in range(num_instances)]), np.std([float(y[i + 1]) for i in range(num_instances)])])
 
-    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "balance") , np.array(balances), delimiter=' ',fmt='%s')
+    # np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "balance") , np.array(balances), delimiter=' ',fmt='%s')
 
 
-    # objs = []
-    # next(obj_f)
-    # for num in num_list:
-    #     next(obj_f)
-    #     good_data = []
-    #     good_ratio = []
-    #     for i in range(num_instances):
-    #         line = obj_f.readline().strip()
-    #         y = line.split(' ')
-    #         good_data.append(float(y[2]))
-    #         good_ratio.append(float(y[1]) / float(y[3]))
-    #     objs.append([num, np.average(good_data), np.std(good_data), np.average(good_ratio), np.std(good_ratio)])
-    # np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "obj") , np.array(objs), delimiter=' ', fmt='%s')
+    objs = []
+    next(obj_f)
+    for num in num_list:
+        next(obj_f)
+        good_data = []
+        good_ratio = []
+        for i in range(num_instances):
+            line = obj_f.readline().strip()
+            y = line.split(' ')
+            good_data.append(float(y[2]))
+            good_ratio.append(float(y[1]) / float(y[3]))
+        objs.append([num, np.average(good_data), np.std(good_data), np.average(good_ratio), np.std(good_ratio)])
+    np.savetxt("{}/{}_{}.txt".format(output_direc, filename.split('.')[0], "obj") , np.array(objs), delimiter=' ', fmt='%s')

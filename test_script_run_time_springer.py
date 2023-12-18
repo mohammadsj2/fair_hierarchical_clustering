@@ -63,7 +63,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, c, ks, delta):
             balance_tree = refine_rebalance(deepcopy(bal6_tree), eps)
 
             h = round(n ** delta)
-            fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), k, len(blue_pts_sample))
+            fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), ks, len(blue_pts_sample))
 
             fair_obj = calculate_cost_obj(simi, fair_tree)
             print("FairHC Cost:")
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     b = 1
     r = 7
     c = 4 #[1, 2, 4, 8, 16]
-    ks = [2, 4, 8, 16] #[2, 4]
+    ks = 2 #[2, 4, 8, 16] #[2, 4]
     delta = 5/7 #[3/7, 4/7, 5/7, 6/7]
     num_instances = 10
     num_list = [128] #[100, 200, 400, 800, 1600]

@@ -191,6 +191,17 @@ def calculate_cost_obj(simi,root):
 			obj += simi[i][j] * len(get_leaves(least_common))
 	return obj
 
+def calculate_revenue_obj(simi,root):
+	# n = simi.shape[0]
+	obj = 0.0
+	leaves = get_leaves(root)
+	for i in leaves:
+		for j in leaves:
+			if i == j: continue
+			least_common = lca(root,i,j)
+			obj += simi[i][j] * len(get_leaves(least_common))
+	return obj
+
 #calculate average similarity between nodes
 def average_simi(u,v,j,list_nodes, simi):
     count1 = list_nodes[u].get_count()
