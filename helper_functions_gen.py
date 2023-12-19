@@ -327,6 +327,8 @@ def rebalance_tree(root):
 	return root
 
 def refine_rebalance(root,eps):
+	if root is None:
+		return root
 	n = len(get_leaves(root))
 	if eps <= 1/(2*n) or n == 1:
 		return root 
