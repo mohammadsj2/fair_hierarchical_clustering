@@ -192,14 +192,14 @@ def calculate_cost_obj(simi,root):
 	return obj
 
 def calculate_revenue_obj(simi,root):
-	# n = simi.shape[0]
+	n = simi.shape[0]
 	obj = 0.0
 	leaves = get_leaves(root)
 	for i in leaves:
 		for j in leaves:
 			if i == j: continue
 			least_common = lca(root,i,j)
-			obj += simi[i][j] * len(get_leaves(least_common))
+			obj += simi[i][j] * (n-len(get_leaves(least_common)))
 	return obj
 
 #calculate average similarity between nodes
@@ -266,6 +266,43 @@ def average_linkage(simi, current_id=None, indices=None, leaves=None):
         current_id += 1
         leaves.append(new_node)
         simi = update_simi(simi, left_index, right_index, left_weight, right_weight)
+        del leaves[right_index]
+        del leaves[left_index]
+
+    return leaves[0], current_id
+
+def update_simi_max_linkage(simi, left_index, right_index):
+    new_row = np.max([simi[left_index,:], simi[right_index,:]],axis=0)
+    simi = np.vstack((simi, new_row))
+    new_row = np.append(new_row, 0)
+    new_column = new_row.reshape((-1,1))
+    simi = np.hstack((simi, new_column))
+    simi = np.delete(simi, [left_index, right_index], axis=0)
+    simi = np.delete(simi, [left_index, right_index], axis=1)
+    return simi
+
+def maximum_linkage(simi, current_id=None, indices=None, leaves=None):
+    n = simi.shape[0]
+    if current_id is None:
+        current_id = n
+    if leaves is None:
+        if indices is not None:
+            leaves = [Node(id=id, children=None, count=1) for id in indices]
+        else:
+            leaves = [Node(id=id, children=None, count=1) for id in range(n)]
+
+    while len(leaves) > 1:
+        left_index, right_index = find_max(simi, range(len(leaves)))
+
+        left_node = leaves[left_index]
+        right_node = leaves[right_index]
+
+        left_weight = left_node.get_count()
+        right_weight = right_node.get_count()
+        new_node = Node(id=current_id, children=[left_node, right_node],count=left_weight + right_weight)
+        current_id += 1
+        leaves.append(new_node)
+        simi = update_simi_max_linkage(simi, left_index, right_index)
         del leaves[right_index]
         del leaves[left_index]
 
