@@ -53,100 +53,100 @@ def test(filename, num_list, b, r, output_direc, num_instances, c_list, ks_list,
                     balance_f.write("{} ".format(ks))
                     ratio_f.write("{} ".format(ks))
                     for i in range(num_instances):
-                        try:
-                            blue_pts_sample, red_pts_sample = subsample(blue_points, red_points, num)
+                        # try:
+                        blue_pts_sample, red_pts_sample = subsample(blue_points, red_points, num)
 
-                            data = []
-                            data.extend(blue_pts_sample)
-                            data.extend(red_pts_sample)
-                            data = np.array(data)
-                            # first calculate the pairwise distance for all points
-                            start = time.time()
-                            dist, d_max = calculate_distance(data, dist_type="euclidean")
-                            simi = convert_dist(dist)
+                        data = []
+                        data.extend(blue_pts_sample)
+                        data.extend(red_pts_sample)
+                        data = np.array(data)
+                        # first calculate the pairwise distance for all points
+                        start = time.time()
+                        dist, d_max = calculate_distance(data, dist_type="euclidean")
+                        simi = convert_dist(dist)
 
-                            avlk_root, _ = average_linkage(simi)
-                            avlk_dummy = deepcopy(avlk_root)
-                            avlk_obj = calculate_cost_obj(simi, avlk_root)
-                            avlk_rev_obj = calculate_revenue_obj(simi, avlk_root)
-                            print("Average Linkage Cost:")
-                            print(avlk_obj, avlk_rev_obj)
-                            
+                        avlk_root, _ = average_linkage(simi)
+                        avlk_dummy = deepcopy(avlk_root)
+                        avlk_obj = calculate_cost_obj(simi, avlk_root)
+                        avlk_rev_obj = calculate_revenue_obj(simi, avlk_root)
+                        print("Average Linkage Cost:")
+                        print(avlk_obj, avlk_rev_obj)
+                        
 
-                            bal6_tree = rebalance_tree(avlk_dummy)
+                        bal6_tree = rebalance_tree(avlk_dummy)
 
-                            #bal6_clusters = find_maximal_clusters(bal6_tree, b+r)
+                        #bal6_clusters = find_maximal_clusters(bal6_tree, b+r)
 
-                            n = len(get_leaves(bal6_tree))
-                            eps = 1 / (c * math.log2(n))
-                            balance_tree = refine_rebalance(deepcopy(bal6_tree), eps)
+                        n = len(get_leaves(bal6_tree))
+                        eps = 1 / (c * math.log2(n))
+                        balance_tree = refine_rebalance(deepcopy(bal6_tree), eps)
 
-                            h = round(n ** delta)
-                            fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), ks, len(blue_pts_sample))
+                        h = round(n ** delta)
+                        fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), ks, len(blue_pts_sample))
 
-                            fair_obj = calculate_cost_obj(simi, fair_tree)
-                            fair_rev_obj = calculate_revenue_obj(simi, fair_tree)
+                        fair_obj = calculate_cost_obj(simi, fair_tree)
+                        fair_rev_obj = calculate_revenue_obj(simi, fair_tree)
 
-                            print("FairHC Cost:")
-                            print(fair_obj,fair_rev_obj)
-                            ratio_1 = float(fair_obj / avlk_obj)
-                            ratio_2 = float(fair_rev_obj/ avlk_rev_obj)
-                            ratios = ratios + [ratio_1]
-                            print("Cost Ratio:")
-                            print(ratio_1, ratio_2)
+                        print("FairHC Cost:")
+                        print(fair_obj,fair_rev_obj)
+                        ratio_1 = float(fair_obj / avlk_obj)
+                        ratio_2 = float(fair_rev_obj/ avlk_rev_obj)
+                        ratios = ratios + [ratio_1]
+                        print("Cost Ratio:")
+                        print(ratio_1, ratio_2)
 
-                            upper_bound = get_mw_upper_bound(simi)
-                            print(" ================================ ")
+                        upper_bound = get_mw_upper_bound(simi)
+                        print(" ================================ ")
 
-                            obj_f.write("{} {} {} {} {} {} {}\n".format(avlk_obj, fair_obj, ratio_1, upper_bound, avlk_rev_obj, fair_rev_obj, ratio_2))
-
-
-
-                            #################################
-                            mxlk_root, _ = maximum_linkage(simi)
-                            mxlk_dummy = deepcopy(mxlk_root)
-                            mxlk_obj = calculate_cost_obj(simi, mxlk_root)
-                            mxlk_rev_obj = calculate_revenue_obj(simi, mxlk_root)
-                            
-                            print("Maximum Linkage Cost:")
-                            print(mxlk_obj, mxlk_rev_obj)
-                            
-
-                            bal6_tree = rebalance_tree(mxlk_dummy)
-
-                            #bal6_clusters = find_maximal_clusters(bal6_tree, b+r)
-
-                            n = len(get_leaves(bal6_tree))
-                            eps = 1 / (c * math.log2(n))
-                            balance_tree = refine_rebalance(deepcopy(bal6_tree), eps)
-
-                            h = round(n ** delta)
-                            fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), ks, len(blue_pts_sample))
-
-                            fair_obj = calculate_cost_obj(simi, fair_tree)
-                            fair_rev_obj = calculate_revenue_obj(simi, fair_tree)
-
-                            print("FairHC Cost:")
-                            print(fair_obj, fair_rev_obj)
-                            ratio_1 = float(fair_obj / mxlk_obj)
-                            ratio_2 = float(fair_rev_obj/ mxlk_rev_obj)
-                            ratios = ratios + [ratio_1]
-                            print("Cost Ratio:")
-                            print(ratio_1, ratio_2)
-
-                            upper_bound = get_mw_upper_bound(simi)
-                            print(" ================================ ")
-
-                            obj_f.write("{} {} {} {} {} {} {}\n".format(mxlk_obj, fair_obj, ratio_1, upper_bound, mxlk_rev_obj, fair_rev_obj, ratio_2))
+                        obj_f.write("{} {} {} {} {} {} {}\n".format(avlk_obj, fair_obj, ratio_1, upper_bound, avlk_rev_obj, fair_rev_obj, ratio_2))
 
 
 
-                            obj_f.flush()
-                            time_f.flush()
-                            balance_f.flush()
-                            ratio_f.flush()
-                        except Exception as e:
-                            print(e)
+                        #################################
+                        mxlk_root, _ = maximum_linkage(simi)
+                        mxlk_dummy = deepcopy(mxlk_root)
+                        mxlk_obj = calculate_cost_obj(simi, mxlk_root)
+                        mxlk_rev_obj = calculate_revenue_obj(simi, mxlk_root)
+                        
+                        print("Maximum Linkage Cost:")
+                        print(mxlk_obj, mxlk_rev_obj)
+                        
+
+                        bal6_tree = rebalance_tree(mxlk_dummy)
+
+                        #bal6_clusters = find_maximal_clusters(bal6_tree, b+r)
+
+                        n = len(get_leaves(bal6_tree))
+                        eps = 1 / (c * math.log2(n))
+                        balance_tree = refine_rebalance(deepcopy(bal6_tree), eps)
+
+                        h = round(n ** delta)
+                        fair_tree    = fair_hc(deepcopy(balance_tree), eps, math.log2(h), ks, len(blue_pts_sample))
+
+                        fair_obj = calculate_cost_obj(simi, fair_tree)
+                        fair_rev_obj = calculate_revenue_obj(simi, fair_tree)
+
+                        print("FairHC Cost:")
+                        print(fair_obj, fair_rev_obj)
+                        ratio_1 = float(fair_obj / mxlk_obj)
+                        ratio_2 = float(fair_rev_obj/ mxlk_rev_obj)
+                        ratios = ratios + [ratio_1]
+                        print("Cost Ratio:")
+                        print(ratio_1, ratio_2)
+
+                        upper_bound = get_mw_upper_bound(simi)
+                        print(" ================================ ")
+
+                        obj_f.write("{} {} {} {} {} {} {}\n".format(mxlk_obj, fair_obj, ratio_1, upper_bound, mxlk_rev_obj, fair_rev_obj, ratio_2))
+
+
+
+                        obj_f.flush()
+                        time_f.flush()
+                        balance_f.flush()
+                        ratio_f.flush()
+                        # except Exception as e:
+                        #     print(e)
 
                     print(ratios)
                     time_f.write("\n")
@@ -178,10 +178,10 @@ if __name__ == "__main__":
     filename = "Census Race 1:7 adult_r.csv"
     b = 1
     r = 7
-    c_list = [1, 2, 4, 8]
-    ks_list = [2, 4, 8, 16] #[2, 4]
-    delta_list = [1/6, 2/6, 3/6, 4/6, 5/6]
-    num_instances = 10
+    c_list = [2]
+    ks_list = [2] #[2, 4]
+    delta_list = [4/6]
+    num_instances = 5
     num_list = [128] #[100, 200, 400, 800, 1600]
     np.random.seed(0)
     random.seed(0)

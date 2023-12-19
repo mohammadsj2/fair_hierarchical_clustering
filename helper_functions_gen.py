@@ -66,6 +66,8 @@ def get_cluster_sizes(root):
 	return sizes
 
 def get_leaves(root):
+	if root is None:
+		return []
 	if root.is_leaf():
 		return [root.get_id()]
 	else:
@@ -75,8 +77,9 @@ def get_leaves(root):
 		return leaves
 def get_children(root):
 	children = []
-	for child in root.get_children():
-		children = children + [child]
+	if root is not None:
+		for child in root.get_children():
+			children = children + [child]
 	return children
 
 #calculate the upper bound of mw objective using similarity
@@ -674,7 +677,8 @@ def delete_subtree(root, v):
 	return update_counts(root)
 
 def update_counts(root):
-	root.count = len(get_leaves(root))
+	if root is not None:
+		root.count = len(get_leaves(root))
 	return root
 
 
