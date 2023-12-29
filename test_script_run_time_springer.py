@@ -42,7 +42,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, c_list, ks_list,
                     for i in range(num_instances):
                         print("Delta: %f" %delta)
                         time_f.write("{} ".format(delta))
-                        obj_f.write("{}\n".format(delta))
+                        obj_f.write("newrun\n{}\n".format(delta))
                         balance_f.write("{} ".format(delta))
                         ratio_f.write("{} ".format(delta))
 
@@ -58,7 +58,7 @@ def test(filename, num_list, b, r, output_direc, num_instances, c_list, ks_list,
                         balance_f.write("{} ".format(ks))
                         ratio_f.write("{} ".format(ks))
 
-                        print("instance: %f" %i)
+                        print("instance: %d" %i)
                         time_f.write("{} ".format(i))
                         obj_f.write("{}\n".format(i))
                         balance_f.write("{} ".format(i))
