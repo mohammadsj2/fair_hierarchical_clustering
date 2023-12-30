@@ -186,17 +186,17 @@ def test(filename, num_list, b, r, output_direc, num_instances, c_list, ks_list,
 
 if __name__ == "__main__":
     sys.setrecursionlimit(100000)
-    filename = "Census Race 1:7 adult_r.csv"
+    filename = "Bank Marital Status 1:2 bank.csv"
     b = 1
-    r = 7
-    c_list = [1, 2, 4, 8]
-    ks_list = [2, 4, 8, 16] #[2, 4]
-    delta_list = [1/6, 2/6, 3/6, 4/6, 5/6]
-    num_instances = 5
-    # c_list = [2]
-    # ks_list = [2] #[2, 4]
-    # delta_list = [4/6]
+    r = 2
+    # c_list = [1, 2, 4, 8]
+    # ks_list = [2, 4, 8, 16] #[2, 4]
+    # delta_list = [1/6, 2/6, 3/6, 4/6, 5/6]
     # num_instances = 5
+    c_list = [2]
+    ks_list = [2] #[2, 4]
+    delta_list = [1/6]
+    num_instances = 10
     num_list = [128] #[100, 200, 400, 800, 1600]
     np.random.seed(0)
     random.seed(0)
